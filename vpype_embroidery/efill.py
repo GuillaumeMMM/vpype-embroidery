@@ -24,13 +24,14 @@ from svgelements import Point
     help="Distance Between lines in the fill" "(default: 0.4mm)",
 )
 @vpype_cli.global_processor
-def efill(document: vp.Document, tolerance: float, distance: float):
+def efill(document: vp.Document, tolerance: float, distance: float, layers: list):
     """
     Implements the Eulerian fill algorithm which fills any closed shapes with as few paths as there are contiguous
     regions. With scanlines to fill any shapes, even those with holes, with an even-odd fill order and direct pathing.
 
     """
     for layer in list(document.layers.values()):  # Add all the closed paths to the efill.
+        app.logger.info("Processing layer %s" % layer)
         efill = EulerianFill(distance)
         for p in layer:
             if np.abs(p[0] - p[-1]) <= tolerance:
